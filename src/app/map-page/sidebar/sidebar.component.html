@@ -1,0 +1,138 @@
+<div class="sidebar">
+  <div class="container header">
+    <h3>Map Objects</h3>
+    <button
+      class="button add-object"
+      (click)="onOpenModal()"
+      title="Add object"
+    >
+      +
+    </button>
+  </div>
+  <input
+    #filterInput
+    (input)="onFilterInput(filterInput.value)"
+    class="filter-input"
+    placeholder="Search"
+  />
+
+  <div *ngIf="mapMarkers.length; else emptyBlock">
+    <div *ngFor="let mapMarker of mapMarkers">
+      <div
+        (click)="onSelectObject(mapMarker)"
+        class="container object-item"
+        [ngClass]="{
+          active: mapMarker.isActive,
+          'd-none': !checkFilter(mapMarker)
+        }"
+      >
+        <div
+          [title]="mapMarker.mapObject.description"
+          class="object-item"
+          [ngClass]="{
+            active: mapMarker.isActive,
+            'd-none': !checkFilter(mapMarker)
+          }"
+        >
+          {{ mapMarker.mapObject.name }}
+        </div>
+        <button
+          class="remove-button"
+          (click)="onRemoveObject($event, mapMarker)"
+        >
+          x
+        </button>
+      </div>
+    </div>
+  </div>
+  <ng-template #emptyBlock>
+    <div class="text-center text-muted">Nothing to display.</div>
+  </ng-template>
+</div>
+
+<div class="modal-window" [ngClass]="{ open: isModalOpen }">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <h4>Add object</h4>
+    <div class="input-group">
+      <input
+        #latitude
+        formControlName="latitude"
+        type="number"
+        class="form-input"
+        placeholder="Latitude"
+        [ngClass]="{
+          invalid: form.get('latitude').invalid && form.get('latitude').touched
+        }"
+      />
+      <label [for]="latitude">Latitude</label>
+      <span
+        *ngIf="form.get('latitude').invalid && form.get('latitude').touched"
+        class="helper-text"
+      >
+        Enter latitude
+      </span>
+    </div>
+    <div class="input-group">
+      <input
+        #longitude
+        formControlName="longitude"
+        placeholder="Longitude"
+        type="number"
+        class="form-input"
+        [ngClass]="{
+          invalid:
+            form.get('longitude').invalid && form.get('longitude').touched
+        }"
+      />
+      <label [for]="longitude">Longitude</label>
+      <span
+        *ngIf="form.get('longitude').invalid && form.get('longitude').touched"
+        class="helper-text"
+      >
+        Enter longitude
+      </span>
+    </div>
+    <div class="input-group">
+      <input
+        #name
+        formControlName="name"
+        type="text"
+        class="form-input"
+        [ngClass]="{
+          invalid: form.get('name').invalid && form.get('name').touched
+        }"
+        placeholder="Name"
+      />
+      <label [for]="name">Name</label>
+      <span
+        *ngIf="form.get('name').invalid && form.get('name').touched"
+        class="helper-text"
+      >
+        Enter name
+      </span>
+    </div>
+    <div class="input-group">
+      <input
+        #description
+        formControlName="description"
+        type="text"
+        class="form-input"
+        placeholder="Description"
+      />
+      <label [for]="description">Description</label>
+    </div>
+
+    <div>
+      <button
+        class="button"
+        type="submit"
+        [disabled]="form.invalid || form.disabled"
+      >
+        Create
+      </button>
+      <button class="button" type="button" (click)="onCancelModal()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

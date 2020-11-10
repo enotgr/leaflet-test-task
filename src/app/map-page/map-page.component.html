@@ -1,0 +1,5 @@
+<div *ngIf="mapMarkers$ | async as mapMarkers; else loader">
+  <app-map-leaflet [mapMarkers]="mapMarkers"></app-map-leaflet>
+  <app-sidebar [mapMarkers]="mapMarkers"></app-sidebar>
+</div>
+<ng-template #loader>Wait...</ng-template>
